@@ -1,0 +1,401 @@
+{
+  "name": "Daily content creator",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "10ikDcj9qB5yV6ZcyOAqHSHN0fCJ848T8tn66wcGClWU",
+          "mode": "list",
+          "cachedResultName": "LinkedIn content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10ikDcj9qB5yV6ZcyOAqHSHN0fCJ848T8tn66wcGClWU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10ikDcj9qB5yV6ZcyOAqHSHN0fCJ848T8tn66wcGClWU/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "To do"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        80,
+        -80
+      ],
+      "id": "0b606c5a-7fcf-49ac-b9eb-21f501191856",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "frXm75xx7Lz2QTfZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"Search most trusted web sites and socia medias like reddit for{{ $json.Topic }}\",\n  \"topic\": \"general\",\n  \"search_depth\": \"advanced\",\n  \"chunks_per_source\": 3,\n  \"max_results\": 3,\n  \"time_range\": null,\n  \"days\": 7,\n  \"include_answer\": true,\n  \"include_raw_content\": false,\n  \"include_images\": false,\n  \"include_image_descriptions\": false,\n  \"include_domains\": [],\n  \"exclude_domains\": []\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        128,
+        144
+      ],
+      "id": "e01bcf94-5c6b-4b75-a9ba-4bcaee6c4e02",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=passage1:{{ $json.results[0].content }}\npassage2:{{ $json.results[1].content }}\npassage3:{{ $json.results[2].content }}",
+        "options": {
+          "systemMessage": "=You are a LinkedIn Post Generator Agent operating in strict mode. Your task is to transform five input passages into a professional, inspiring, and engaging LinkedIn post for entrepreneurs and AI enthusiasts.\n\n\n\n🎯 Objective\n\n\n\nSynthesize the core ideas from the five passages\n\n\n\nWrite in a confident, forward-thinking tone\n\n\n\nAppeal to innovation-driven professionals\n\n\n\nEncourage engagement and sharing\n\n\n\n\n\n🧾 Output Requirements\n\n\n\nWrite in fluent, human-like language\n\n\nDo not use any Markdown formatting whatsoever (e.g., no **asterisks** for bolding, no `#` for headers, no `-` or `---` for horizontal lines). USE ALL CAPS FOR EMPHASIS.\n\n\nDo not include internal reasoning, setup phrases, or explanations\n\n\n\nDo not mention your process or role\n\n\n\nOutput only the final LinkedIn post, fully ready to publish\n\n\n\nNo tags, markdown, or labels such as <think> or <response>\n\n\n\n\n\n📝 Post Structure\n\n\n\nThe LinkedIn post must include:\n\n\n\nHeadline – Bold and attention-grabbing\n\n\n\nOpening Hook – Relatable and personal, with storytelling elements\n\n\n\nCore Message – 5–8 sentences, expanding with insights or examples if relevant\n\n\n\nBreakdown Section – Use short sections with clear icons. The agent must select **creative, topic-specific emojis** for each sub-section title (e.g., 💡 for insights, ⚙️ for tools, 🚀 for scale). Use ALL CAPS for section titles within this breakdown.\n\n\n\nTakeaway or Call to Action – Motivational or thought-provoking\n\n\n\nHashtags – 5–7 relevant and trending\n\n\n\nEmojis – Use sparingly to enhance tone and readability\n\n\n\n📌 Style Guidelines\n\n\n\nLength target: 350–380 words\n\n\n\nUse line breaks for clarity\n\n\n\nMaintain clarity, energy, and relevance\n\n\n\nEnsure it reads as if written by a professional human\n\n\n\nAlways follow the example format provided\n\n\n\n📌 Example Post Format (for every future post to follow)\n\n\n\nOver the last 5-6 months, I’ve been seeing a ton of hype around the n8n platform, so I decided to give it a try and see for myself how great it really is when it comes to AI automation. Well... I’m hooked! 😄 I can’t seem to detach myself, even during my leisure time, from exploring what n8n can do.\n\nToday, I’m excited to share one of the workflows I’ve built at my initial stage.\n\n\n\n🔍 Here’s the workflow in a nutshell:\n\nAutomated project management: My team, Sickle Vision, has a Google Sheet where we track all project details — deadlines, delivery status, client info, project value, and more. 📝\n\n\n\nBut why keep doing it manually when we can automate the process?\n\nInstant updates: Whenever a new project is added, the system updates the Google Sheet and stores the project data in a vector database — all automatically. ⚡\n\n\n\nAI-powered chatbot: Now, you can simply ask a chatbot about the project’s status or any details, and get instant answers! 💬\n\n\n\n🔧 Here’s the tech behind it:\n\n✨ Google Drive & Google Sheets — for easy project tracking and data management.\n\n✨ Pinecone Vector Database — to store project details as vectors for efficient querying and retrieval.\n\n✨ text-embedding-ada-002 model for vector embeddings — ensuring quick and efficient data storage.\n\n✨ meta-llama/llama-scout-4 model for reasoning — providing smart, conversational AI responses.\n\n\n\nThe power of n8n, Google Drive, Google Sheets, Pinecone, and AI comes together to streamline our workflow, making project management simpler, faster, and more intuitive.\n\n\n\nIt’s amazing how AI automation can enhance productivity and bring a whole new level of efficiency to team management. Excited to keep exploring and building even more with n8n!"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        -16
+      ],
+      "id": "c25da719-4c4f-4aaf-be18-f241e04f0475",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-preview-09-2025",
+        "options": {
+          "maxOutputTokens": 2500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        480,
+        176
+      ],
+      "id": "d05242df-bf7c-4424-8e25-9e219b46d005",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Y2I3Prt1ppvCDrnE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "10ikDcj9qB5yV6ZcyOAqHSHN0fCJ848T8tn66wcGClWU",
+          "mode": "list",
+          "cachedResultName": "LinkedIn content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10ikDcj9qB5yV6ZcyOAqHSHN0fCJ848T8tn66wcGClWU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10ikDcj9qB5yV6ZcyOAqHSHN0fCJ848T8tn66wcGClWU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ $('Get row(s) in sheet').item.json.Topic }}",
+            "Status": "Created",
+            "Content": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        128
+      ],
+      "id": "2e443430-41cf-456f-88ce-fab89f06d5d3",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "frXm75xx7Lz2QTfZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "ueLHKC80OS",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "dc231190-9751-4a24-a799-b8175a3e8f5c",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "YkWzQ28kAfYYWuCc",
+          "name": "LinkedIn account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7,
+              "triggerAtMinute": null
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -272,
+        -96
+      ],
+      "id": "73ceb90e-26a0-4b02-bd6b-bdbfa4a32a9a",
+      "name": "Schedule Trigger",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        128
+      ],
+      "id": "3cb95b03-3f74-4574-b83a-20549a30ad09",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "### The statement describes the initial steps of an automated content generation workflow ---->\n\n### Trigger: The workflow is launched by a daily scheduler.\n\n### Input: It first retrieves the subject/topic of the post from a Google Sheet.\n\n### Research: It uses the Tavily API to search the web and fetch the raw content/data based on the retrieved topic.r",
+        "height": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -752,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "5fca09b2-6051-4738-a88c-3c2a33ad1067",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 480,
+        "width": 720,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "49bfef94-e4a5-4226-969a-f5164fcc670c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 480,
+        "width": 736,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "ae6cbaaf-27f9-42af-b459-89979983629f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n### will add a voice agents to automatically update the sheets topic\n\n### will add image generation model to generate an image based on the topic headers\n\n### will add drive which will store the image and the linked in will take the photo from the web and will automatically post the content and genrated image from the drive",
+        "height": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "a1d1e377-121c-4cae-9f05-e5c2b6529c40",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ea67bff2-7df5-412c-bab1-689fe7ac70ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "85319aa28ad323aaf31122ca9536b3a9fe952018320074b78b8c1ef1b9de5c95"
+  },
+  "id": "9Km3fWt8whlatFQ1",
+  "tags": []
+}

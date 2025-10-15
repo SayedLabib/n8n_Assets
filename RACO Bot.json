@@ -1,0 +1,468 @@
+{
+  "name": "RACO Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1vMiyjjv_Dwuu3Bz6hACYlOwMsMGUShMP",
+          "mode": "list",
+          "cachedResultName": "About RACO.AI",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1vMiyjjv_Dwuu3Bz6hACYlOwMsMGUShMP"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d1fde3a6-45eb-4932-af1b-dd8122bfe423",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lwZcnOCcISEGmztZ",
+          "name": "OAuth_google"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c8a313b1-c014-4d0d-97d6-514a6d14a5cd",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lwZcnOCcISEGmztZ",
+          "name": "OAuth_google"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "products-information",
+          "mode": "list",
+          "cachedResultName": "products-information"
+        },
+        "options": {
+          "pineconeNamespace": "Products_informations"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "862edff5-0bb8-4e6a-95ed-cf3c20e702d8",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "NgYBVYXTw96IQ15r",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        176
+      ],
+      "id": "7963f3c7-4f35-4855-b935-db46d82d3b23",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "iGE65dimaIMSlMiy",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "loader": "docxLoader",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        176
+      ],
+      "id": "2381ee0a-ed06-4297-94c4-5bd771b107d9",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.query.message}}",
+        "options": {
+          "systemMessage": "=This refinement makes the introduction flow perfectly into the start of the conversation.\n\nHere is the finalized System Prompt with the introduction fully integrated:\n\n```\nYou are **Serena, RACO Support**, a highly capable, dedicated, and engaging customer support AI for **RACO.AI**.\n\nYour core mission is to provide excellent service and attract customers to our platform.\n\n## Initial Interaction Protocol\n\n1.  **Mandatory Introduction:** Before addressing any customer query, you **must** introduce yourself and open the conversation. State clearly: **\"Hello! My name is Serena, and I'm a dedicated member of RACO.AI here to help you today. How can I help you today, sir/ma'am?\"**\n\n## Core Directives & Conversational Strategy\n\n1.  **Inform and Educate:** Provide accurate and helpful information regarding RACO.AI's **policies, terms and conditions**, and the company's background.\n2.  **Service Inquiry Handling (Conversational Flow):** When a customer asks about RACO.AI's services, you must adopt a friendly, consultative approach. **Do not \"vomit up the whole thing.\"** Instead, immediately pivot to qualification:\n    * Ask a few gentle, friendly questions to understand their needs, such as: \"May I ask, what is your profession or what you do actually for a living?\" or \"Are you running a business yourself? Is it a startup, a settled company, and which industry do you belong to?\"\n    * Use the customer's answer to suggest the **best-suited packages or services** for *their specific needs* in a conversational, friendly manner. This is how you introduce the relevant services and packages (the \"sweet talk\").\n3.  **Promotional Focus (Sweet Talk):** Actively promote the benefits and advantages of RACO.AI's services, emphasizing how our offerings for **different industries** and **customizable individual AI agents** can solve *their specific problems*.\n\n---\n\n## Knowledge and Guardrails\n\n* **Strict Knowledge Boundary:** Your knowledge is **strictly limited to the RACO.AI platform, its policies, terms, services, and packages.**\n* **Handling Out-of-Scope Queries:** If a customer asks about *anything* not covered in your knowledge base (i.e., not directly about RACO.AI), you **must not answer the question.**\n    * Instead, you must politely state that you do not have information about anything outside of the RACO.AI platform.\n    * Immediately pivot back to RACO.AI by saying something like: \"However, we would love to support you with your needs from our side! Let me remind you what RACO.AI is providing to help you succeed...\" and then proceed to summarize our key offerings (industries, custom agents, packages).\n\n**Tone:** Highly helpful, professional, dedicated, engaging, and subtly promotional (\"sweet talks\"). Always maintain a positive, solution-oriented, and conversational demeanor.\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1248,
+        -16
+      ],
+      "id": "9ab1b3a1-d694-4745-9fbf-66540984da09",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $workflow.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1120,
+        208
+      ],
+      "id": "7b2c5769-77ea-49c9-bcdc-57743815f500",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        224
+      ],
+      "id": "369bc24f-39ac-40e6-ad9b-ce092e006cef",
+      "name": "When chat message received",
+      "webhookId": "f7403e17-cead-45c4-832c-ebfe607672dc"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Access this tool to retrieve the information about the the company details and the products as well services like which services are we are offering for our customers. And according to their business weights and size it will help them to choose a product for them",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "products-information",
+          "mode": "list",
+          "cachedResultName": "products-information"
+        },
+        "options": {
+          "pineconeNamespace": "Products_informations"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1280,
+        176
+      ],
+      "id": "d4fa86d7-5123-458a-9a91-2085dff8e34d",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "NgYBVYXTw96IQ15r",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 448,
+        "width": 848,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -80,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "0a81a009-9b36-470a-bafd-e411415b1afc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 256
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        912,
+        176
+      ],
+      "id": "633370e0-fafb-4067-92cf-305635fd46c5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "0eFiYiqEL0Uufa8V",
+          "name": "Gemini API KEY"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        240
+      ],
+      "id": "0f62b6f1-7e09-4856-9308-91ac2f40c67a",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "JGImDZwUuibjSlIm",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1376,
+        288
+      ],
+      "id": "da17ff4b-2e54-40d5-a04e-5a38832fab78",
+      "name": "Text Embedding",
+      "credentials": {
+        "openAiApi": {
+          "id": "iGE65dimaIMSlMiy",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 448,
+        "width": 1024
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "4c465c85-bb11-4767-9118-12d21d244b44",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "path": "033c43bd-6c53-41e8-80d1-f91d91d37727",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        944,
+        -16
+      ],
+      "id": "e8a33b62-2729-4420-90ae-54a4307f616b",
+      "name": "Webhook",
+      "webhookId": "033c43bd-6c53-41e8-80d1-f91d91d37727",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1584,
+        48
+      ],
+      "id": "7eb787c2-48ec-4074-8c91-444c3de17e9c",
+      "name": "Respond to Webhook",
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        []
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        []
+      ]
+    },
+    "Text Embedding": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e9eb0f0f-a4de-4a39-98b2-3b9c37754c06",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e5ad58bb67b1145128dc1245384b9582a5ab4a852efdd085fef846519a2cfeb6"
+  },
+  "id": "uL8q3yEtCDzRY77I",
+  "tags": []
+}

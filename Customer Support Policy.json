@@ -1,0 +1,300 @@
+{
+  "name": "Customer Support Policy",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        -96
+      ],
+      "id": "97507c7d-a058-4084-bd59-7251f70fdd75",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dsKR4532m8TdQSQx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "project details",
+              "description": "An email from the person who wants to know about the project details and updates."
+            },
+            {
+              "category": "Other",
+              "description": "Any email that is not customer support related"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -288,
+        -96
+      ],
+      "id": "bac8eae1-08d9-48bf-a07f-a24cdb96b717",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        80,
+        128
+      ],
+      "id": "8921d529-67ec-4a32-8877-1857e502efe9",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Call this tool access the product details and information",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "products-information",
+          "mode": "list",
+          "cachedResultName": "products-information"
+        },
+        "options": {
+          "pineconeNamespace": "Products_informations"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        -48
+      ],
+      "id": "cd48255c-ef0a-4c06-8bc7-62061c86045a",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "LGSrbyuuVwY2JCIQ",
+          "name": "PineconeApi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-ada-002",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        128
+      ],
+      "id": "49364a48-db5c-4230-8426-19f3a89d27d8",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "b97h2qpMFOnGSF6q",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.text }}",
+        "options": {
+          "systemMessage": "You are a helpful email assistant who will write the email according to the fetched information. Do not include any introductory phrases such as 'Here are the details for the Donna Life project:'. The response is written to the email giver, not the person being emailed. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        -272
+      ],
+      "id": "7eb3d0ff-8582-4f68-bd43-cd2ce919a316",
+      "name": "AI Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        -272
+      ],
+      "id": "d0e6b097-1446-4c27-b434-57f28374fb32",
+      "name": "Reply to a message",
+      "webhookId": "1359c485-0357-4c43-aa4a-aeba7e81597f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dsKR4532m8TdQSQx",
+          "name": "Gmail account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        112
+      ],
+      "id": "0a0bd012-cbec-4539-940d-b27f6e46eaac",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KL0ZomsXpWbzNoXl",
+          "name": "Google Gemini(PaLM) Api account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -64
+      ],
+      "id": "e6bb43f9-85ef-4b2e-b9ee-57f9ffadc25e",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KL0ZomsXpWbzNoXl",
+          "name": "Google Gemini(PaLM) Api account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "84aee88d-059b-4e9f-a973-834cf81fcbe9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2c621e785076a12299ac413390f9b69fd5ec74e7f031854bad90b62a9cae4520"
+  },
+  "id": "GfHJr4oMMKAbS9FD",
+  "tags": []
+}
