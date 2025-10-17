@@ -1,0 +1,417 @@
+{
+  "name": "AI Voice Assistance",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-audio",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "028000ca-2232-4168-867b-88f53eab9760",
+      "name": "Audio Processing Endpoint",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        1200,
+        1104
+      ],
+      "webhookId": "287d40b1-4172-4ba0-9a1d-6d971dd9cf68",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are a helpful AI assistant. Respond in a friendly and conversational manner."
+        }
+      },
+      "id": "d86e58ed-a0be-4853-a1dd-7d59bd6d2c1f",
+      "name": "Process User Query",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1424,
+        1104
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "voice-assistant-session",
+        "contextWindowLength": 30
+      },
+      "id": "9f336bfd-1dfc-4d4a-9fad-74d3df57bf0c",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1392,
+        1296
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "id": "4e400995-440d-4a2b-927c-9e612a649fe8",
+      "name": "Send Audio Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        2080,
+        1072
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.output }}",
+        "voice": "echo",
+        "options": {}
+      },
+      "id": "e468576e-22b6-44ef-9b0e-d2a95d72d2aa",
+      "name": "Generate Voice Response",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        1904,
+        944
+      ],
+      "typeVersion": 1.8,
+      "credentials": {
+        "openAiApi": {
+          "id": "1NwkZLCAUbSpan4z",
+          "name": "OpenAi account 2120"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## BACKEND PROCESSING\n\nThis section handles:\n1. Receiving transcribed speech from the frontend\n2. Processing through AI with conversation memory\n3. Converting response to speech\n4. Sending audio back to the browser",
+        "height": 580,
+        "width": 1100,
+        "color": 3
+      },
+      "id": "12cca86e-0868-4569-b89c-7f0d638254d1",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1104,
+        880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Voice Assistant Interface with n8n and OpenAI\n\nThis workflow creates a voice-activated AI assistant interface that runs directly in your browser. Users can click on a glowing orb to speak with the AI, which responds with voice using OpenAI's text-to-speech capabilities.\n\n## Who is it for?\n\nThis template is perfect for:\n- Developers looking to add voice interfaces to their applications\n- Customer service teams wanting to create voice-enabled support systems\n- Content creators building interactive voice experiences\n- Anyone interested in creating their own \"Alexa-like\" assistant\n\n## How it works\n\nThe workflow consists of two main parts:\n\n1. **Frontend Interface**: A beautiful animated orb that users click to activate voice recording\n2. **Backend Processing**: Receives the audio transcription, processes it through an AI agent with memory, and returns voice responses\n\nThe system uses:\n- Web Speech API for voice recognition (browser-based)\n- OpenAI GPT-4o-mini for intelligent responses\n- OpenAI Text-to-Speech for voice synthesis\n- Session memory to maintain conversation context\n\n## Setup requirements\n\n- n8n instance (self-hosted or cloud)\n- OpenAI API key with access to:\n  - GPT-4o-mini model\n  - Text-to-Speech API\n- Modern web browser with Web Speech API support (Chrome, Edge, Safari)\n\n## How to set up\n\n1. Import the workflow into your n8n instance\n2. Add your OpenAI credentials to both OpenAI nodes\n3. Copy the webhook URL from the \"Audio Processing Endpoint\" node\n4. Edit the \"Voice Assistant UI\" node and replace `YOUR_WEBHOOK_URL_HERE` with your webhook URL\n5. Access the \"Voice Interface Endpoint\" webhook URL in your browser\n6. Click the orb and start talking!\n\n## How to customize the workflow\n\n- **Change the AI personality**: Edit the system message in the \"Process User Query\" node\n- **Modify the visual style**: Customize the CSS in the \"Voice Assistant UI\" node\n- **Add more capabilities**: Connect additional tools to the AI Agent\n- **Change the voice**: Select a different voice in the \"Generate Voice Response\" node\n- **Adjust memory**: Modify the context window length in the \"Conversation Memory\" node\n\n## Demo\n\nWatch the template in action: https://youtu.be/0bMdJcRMnZY",
+        "height": 1460,
+        "width": 600,
+        "color": 6
+      },
+      "id": "e5a3196b-2865-4a62-b2d9-d755a67fcb38",
+      "name": "Template Description",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        176
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ SETUP INSTRUCTIONS\n\n1. **Add OpenAI Credentials**:\n   - Click on \"GPT-4o-mini Model\" node\n   - Add your OpenAI API credentials\n   - Do the same for \"Generate Voice Response\" node\n\n2. **Configure Webhook URL**:\n   - Copy the webhook URL from \"Audio Processing Endpoint\"\n   - Edit \"Voice Assistant UI\" node\n   - Replace YOUR_WEBHOOK_URL_HERE with the copied URL\n\n3. **Test the Assistant**:\n   - Open the \"Voice Interface Endpoint\" webhook URL in your browser\n   - Click the glowing orb\n   - Allow microphone permissions\n   - Start speaking!",
+        "height": 500,
+        "width": 400,
+        "color": 7
+      },
+      "id": "eba88594-9e7e-47b1-b1de-5e19e4607035",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2528,
+        368
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 🎨 CUSTOMIZATION OPTIONS\n\n**Language Support**:\n- Change `recognition.lang = 'en-US'` in the HTML\n- Options: 'pt-BR', 'es-ES', 'fr-FR', etc.\n\n**Voice Options**:\n- alloy: Neutral and balanced\n- echo: Warm and conversational\n- fable: Expressive and dynamic\n- onyx: Deep and authoritative\n- nova: Friendly and upbeat\n- shimmer: Soft and gentle\n\n**Visual Themes**:\n- Modify CSS colors for different moods\n- Adjust animation speeds\n- Change orb size and effects",
+        "height": 440,
+        "width": 400,
+        "color": 7
+      },
+      "id": "8eb03b82-cc02-46d9-b9b6-873718202e32",
+      "name": "Customization Options",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2544,
+        992
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        1312
+      ],
+      "id": "6ee69ae3-08be-4fe6-ae9b-fae4dcf183bc",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "peAWy24ECbRy52hG",
+          "name": "Google Gemini API Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Retrieve the data from the database and act accordingly",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "akashbari",
+          "mode": "list",
+          "cachedResultName": "akashbari"
+        },
+        "options": {
+          "pineconeNamespace": "akashbari"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1536,
+        1312
+      ],
+      "id": "a4b26c78-0c1c-454a-b2a0-058105a91ced",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "40qFT2o7mqcYRBRF",
+          "name": "Akashbari"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1648,
+        1472
+      ],
+      "id": "2dfa0bf3-80b3-4162-8df0-5a7a8f2da821",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "1NwkZLCAUbSpan4z",
+          "name": "OpenAi account 2120"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "voice-assistant",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "11ca43df-9901-4d37-87d4-7987ae711b41",
+      "name": "Voice Interface Endpoint",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        1264,
+        544
+      ],
+      "webhookId": "71ac230d-5949-41ba-b05e-761cb5cb07f3",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>AI Voice Assistant</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <style>\n    body {\n      background-color: #000;\n      color: white;\n      font-family: 'Segoe UI', sans-serif;\n      display: flex;\n      flex-direction: column;\n      justify-content: center;\n      align-items: center;\n      height: 100vh;\n      margin: 0;\n      overflow: hidden;\n    }\n\n    .orb-container {\n      position: relative;\n    }\n\n    .orb {\n      width: 200px;\n      height: 200px;\n      background: radial-gradient(circle at 30% 30%, #00ffff, #004d4d);\n      border-radius: 50%;\n      box-shadow: 0 0 40px #00ffff88;\n      cursor: pointer;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      z-index: 2; /* Ensures clickability */\n    }\n\n    .ring {\n      position: absolute;\n      top: -20px;\n      left: -20px;\n      width: 240px;\n      height: 240px;\n      border-radius: 50%;\n      box-shadow: 0 0 30px #00ffff55;\n      animation: pulse 2s infinite;\n      z-index: 1;\n      pointer-events: none; /* Prevents click interference */\n    }\n    \n    .orb.listening {\n      background: radial-gradient(circle at 30% 30%, #00ffcc, #005c5c);\n      box-shadow: 0 0 50px #00ffff;\n    }\n\n    .orb.playing {\n      background: radial-gradient(circle at 30% 30%, #ff00ff, #520052);\n      box-shadow: 0 0 50px #ff00ff99;\n    }\n\n    .ring.listening {\n      animation: vibrate 0.4s infinite;\n    }\n\n    .ring.playing {\n      animation: glow 1s ease-in-out infinite alternate;\n    }\n\n    @keyframes pulse {\n      0%, 100% { transform: scale(1); opacity: 0.6; }\n      50% { transform: scale(1.2); opacity: 1; }\n    }\n\n    @keyframes vibrate {\n      0% { transform: scale(1.05); }\n      50% { transform: scale(1.15); }\n      100% { transform: scale(1.05); }\n    }\n\n    @keyframes glow {\n      0% { box-shadow: 0 0 40px #ff00ff88; }\n      100% { box-shadow: 0 0 60px #ff00ffcc; }\n    }\n\n    .status-text {\n      margin-top: 20px;\n      font-size: 18px;\n      color: #aaa;\n      font-weight: 300;\n      font-style: italic;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"orb-container\">\n    <div id=\"ring\" class=\"ring\"></div>\n    <div id=\"orb\" class=\"orb\" title=\"Click to speak with AI\"></div>\n  </div>\n  <div id=\"status\" class=\"status-text\">Click to speak</div>\n\n  <audio id=\"beep\" src=\"https://www.soundjay.com/button/sounds/button-3.mp3\" preload=\"auto\"></audio>\n\n  <script>\n    const orb = document.getElementById('orb');\n    const ring = document.getElementById('ring');\n    const statusText = document.getElementById('status');\n    const beep = document.getElementById('beep');\n\n    let recognition;\n    let lastTranscript = \"\";\n    let silenceTimeout;\n\n    // Initialize speech recognition\n    function startRecognition() {\n      if (!('webkitSpeechRecognition' in window)) {\n        alert('This browser does not support speech recognition.');\n        return;\n      }\n\n      beep.play();\n      recognition = new webkitSpeechRecognition();\n      recognition.lang = 'en-US'; // Change to your preferred language\n      recognition.interimResults = true;\n      recognition.continuous = true;\n      lastTranscript = \"\";\n\n      recognition.onstart = () => {\n        orb.classList.add('listening');\n        ring.classList.add('listening');\n        statusText.textContent = \"Listening...\";\n      };\n\n      recognition.onresult = (event) => {\n        for (let i = event.resultIndex; i < event.results.length; ++i) {\n          if (event.results[i].isFinal) {\n            lastTranscript += event.results[i][0].transcript;\n          }\n        }\n\n        // Reset silence timeout\n        clearTimeout(silenceTimeout);\n        silenceTimeout = setTimeout(stopRecognition, 1000);\n      };\n\n      recognition.onerror = (event) => {\n        console.error('Error:', event.error);\n        orb.classList.remove('listening');\n        ring.classList.remove('listening');\n        statusText.textContent = \"Error: \" + event.error;\n      };\n\n      recognition.onend = () => {\n        orb.classList.remove('listening');\n        ring.classList.remove('listening');\n      };\n\n      recognition.start();\n    }\n\n    // Stop recognition and send to webhook\n    async function stopRecognition() {\n      if (recognition) {\n        recognition.stop();\n        orb.classList.remove('listening');\n        ring.classList.remove('listening');\n        statusText.textContent = \"Processing...\";\n\n        if (lastTranscript.trim() !== '') {\n          try {\n            // IMPORTANT: Replace YOUR_WEBHOOK_URL_HERE with the actual webhook URL from the 'Audio Processing Endpoint' node\n            const response = await fetch(\"https://fuadal.app.n8n.cloud/webhook/process-audio\", {\n              method: \"POST\",\n              headers: { \"Content-Type\": \"application/json\" },\n              body: JSON.stringify({ question: lastTranscript.trim() })\n            });\n\n            if (!response.ok) throw new Error(\"Server response error\");\n\n            const blob = await response.blob();\n            const audioURL = URL.createObjectURL(blob);\n            const audio = new Audio(audioURL);\n\n            audio.onplay = () => {\n              orb.classList.add('playing');\n              ring.classList.add('playing');\n              statusText.textContent = \"Responding...\";\n            };\n\n            audio.onended = () => {\n              orb.classList.remove('playing');\n              ring.classList.remove('playing');\n              statusText.textContent = \"Click to speak\";\n            };\n\n            audio.play();\n\n          } catch (err) {\n            console.error(\"Error sending or processing response:\", err);\n            statusText.textContent = \"Error communicating with AI\";\n          }\n        }\n      }\n    }\n\n    // Click handler for the orb\n    orb.addEventListener('click', () => {\n      if (recognition && recognition.running) {\n        stopRecognition();\n      } else {\n        startRecognition();\n      }\n    });\n  </script>\n</body>\n</html>\n"
+      },
+      "id": "ad6ab2d2-8c09-410b-b08d-5e56ef073898",
+      "name": "Voice Assistant UI",
+      "type": "n8n-nodes-base.html",
+      "position": [
+        1488,
+        544
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "id": "fc9ac556-93fc-4209-8274-0537b1b726e3",
+      "name": "Send HTML Interface",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        1680,
+        544
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "content": "## VOICE ASSISTANT INTERFACE\n\nThis webhook serves the HTML interface with the interactive orb that users click to speak with the AI assistant.\n\nAccess this webhook URL in your browser to use the voice assistant.",
+        "height": 420,
+        "width": 840,
+        "color": 5
+      },
+      "id": "1e14c096-6a1b-493e-99f6-0d4f4bafa4b6",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        368
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        976,
+        1296
+      ],
+      "id": "f9ecfde8-1c12-4c49-8a25-3faeb731ee27",
+      "name": "When chat message received",
+      "webhookId": "fd3cae01-7248-419a-9f6a-d4f953363895"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Process User Query": {
+      "main": [
+        []
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Process User Query",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Voice Response": {
+      "main": [
+        [
+          {
+            "node": "Send Audio Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Processing Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Process User Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Process User Query",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Process User Query",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice Interface Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Voice Assistant UI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice Assistant UI": {
+      "main": [
+        [
+          {
+            "node": "Send HTML Interface",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Process User Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Audio Response": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "92ba97a6-acaa-4f35-9492-1fdf8599e1af",
+  "meta": {
+    "templateId": "6399",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8aa7a6b00703250dcbefcb510baac06d8bd02203b4f9c49a6f275db8e3adde34"
+  },
+  "id": "Sjk21VM8nHg8ecy0",
+  "tags": []
+}
