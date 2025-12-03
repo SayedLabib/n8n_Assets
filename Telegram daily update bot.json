@@ -1,0 +1,361 @@
+{
+  "name": "Telegram daily update bot",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are bot that indentify the purpose of the expense, amount that has been used and the quantity or, it could be the reason. So, the primary goal is to identify - \n\n1. purpose\n2. amount\n3. quantity\n4. reason\n\nNo extra information it will extract or give just the following things that has been mentioned above."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2160,
+        -464
+      ],
+      "id": "ca85d03f-6a68-4dd6-a8c1-7412b6348f33",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 256
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -2288,
+        -208
+      ],
+      "id": "1fa774e8-08c3-4d3d-b8ca-cfc36b472e20",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "peAWy24ECbRy52hG",
+          "name": "Google Gemini API Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -2128,
+        -208
+      ],
+      "id": "9dc0c932-5f38-4d8e-92b9-ef04bd96ebcd",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2368,
+        -464
+      ],
+      "id": "eabd6a7e-45e4-4175-9971-5433d628381f",
+      "name": "Telegram Trigger",
+      "webhookId": "5581ab74-f2d1-46dc-bd8e-15e4842c91af",
+      "credentials": {
+        "telegramApi": {
+          "id": "nJf03VkyMzSkE7uX",
+          "name": "Telegram account_Fuad"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1e8hhPo3XGovCmwpc8zga66oedQl9F4EDIgJE4v2pkss",
+          "mode": "list",
+          "cachedResultName": "My_Budget",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e8hhPo3XGovCmwpc8zga66oedQl9F4EDIgJE4v2pkss/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e8hhPo3XGovCmwpc8zga66oedQl9F4EDIgJE4v2pkss/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1584,
+        -352
+      ],
+      "id": "cfecf081-8a1c-4f70-9490-36748c8f323a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NizbeMaw5Tt3GOxd",
+          "name": "Google Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get AI Agent output text\nconst text = $input.first().json.output || \"\";\n\n// Split text into clean lines\nconst lines = text.split(/\\n+/).map(l => l.trim()).filter(Boolean);\n\n// Helper to extract value after \"key:\"\nconst extract = (label) => {\n  const line = lines.find(l => l.toLowerCase().startsWith(label.toLowerCase()));\n  if (!line) return \"\";\n  return line.split(\":\").slice(1).join(\":\").trim(); // handles texts with :\n};\n\n// Extract values exactly as the agent output them\nconst purpose = extract(\"purpose\");\nconst amount = extract(\"amount\");      // e.g., \"250tk\"\nconst quantity = extract(\"quantity\");  // e.g., \"1kg\", \"2 dozen\", \"3 litre\"\nconst reason = extract(\"reason\");\n\n// Auto date\nconst now = new Date();\nconst date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;\n\n// Output without modifying units\nreturn [\n  {\n    json: {\n      success: true,\n      date,\n      purpose,\n      amount,      // kept as string with units\n      quantity,    // kept as string with units\n      reason,\n      formatted: `${date} | ${purpose} | Amount: ${amount} | Qty: ${quantity} | reason: ${reason}`\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1824,
+        -464
+      ],
+      "id": "10e8838e-4dd1-4cef-b9ec-82ab260a2dbb",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1e8hhPo3XGovCmwpc8zga66oedQl9F4EDIgJE4v2pkss",
+          "mode": "list",
+          "cachedResultName": "My_Budget",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e8hhPo3XGovCmwpc8zga66oedQl9F4EDIgJE4v2pkss/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e8hhPo3XGovCmwpc8zga66oedQl9F4EDIgJE4v2pkss/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.date }}",
+            "amount": "={{ $json.amount }}",
+            "purpose": "={{ $json.purpose }}",
+            "quantity": "={{ $json.quantity }}",
+            "reason": "={{ $json.reason }}"
+          },
+          "matchingColumns": [
+            "date"
+          ],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "purpose",
+              "displayName": "purpose",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1584,
+        -624
+      ],
+      "id": "3feeb0b9-0618-409e-9812-3ee7741e4c74",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NizbeMaw5Tt3GOxd",
+          "name": "Google Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- 1. CONFIGURATION AND HELPER FUNCTIONS ---\n\n// Define the assumed currency units and their conversion factor to the base unit (1)\nconst CURRENCY_MULTIPLIERS = {\n    // Standard conversion: 1 K = 1000 base units (e.g., 1000 BDT/USD)\n    'K': 1000, \n    // Example for a specific currency suffix that might be misinterpreted as a multiplier\n    'TK': 1 \n};\n\n// Array of month names (0-indexed)\nconst MONTH_NAMES = [\n    \"January\", \"February\", \"March\", \"April\", \"May\", \"June\",\n    \"July\", \"August\", \"September\", \"October\", \"November\", \"December\"\n];\n\n/**\n * Safely converts an amount string (e.g., \"250tk\", \"150K\", \"50\") to a number.\n * @param {string} amountString - The raw amount string from the input.\n * @returns {number} The numeric value of the amount, or 0 if parsing fails.\n */\nconst parseAmount = (amountString) => {\n    if (!amountString || typeof amountString !== 'string') return 0;\n\n    let str = amountString.toUpperCase().trim();\n    let value = parseFloat(str);\n\n    // If a simple float works, return it\n    if (!isNaN(value)) return value;\n\n    // Check for currency suffixes/multipliers\n    for (const suffix in CURRENCY_MULTIPLIERS) {\n        if (str.endsWith(suffix)) {\n            // Remove the suffix and attempt to parse the numeric part\n            let numericPart = str.slice(0, -suffix.length);\n            value = parseFloat(numericPart);\n            \n            if (!isNaN(value)) {\n                return value * CURRENCY_MULTIPLIERS[suffix];\n            }\n        }\n    }\n\n    return 0;\n};\n\n// --- 2. GET CURRENT DATE AND TIME ---\n\nconst now = new Date();\n// Format for comparison: D/M/YYYY\nconst todayDateString = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;\n// Month and year for \"running month\" calculation (Month is 0-indexed: Jan=0, Dec=11)\nconst currentMonthIndex = now.getMonth();\nconst currentMonthName = MONTH_NAMES[currentMonthIndex]; // Retrieve the month name\nconst currentYear = now.getFullYear();\n\n// --- 3. PARSE NEW TRANSACTION FROM AI AGENT OUTPUT ---\n\n// Get AI Agent output text from the first input item\nconst text = $input.first().json.output || \"\";\n\n// Split text into clean lines\nconst lines = text.split(/\\n+/).map(l => l.trim()).filter(Boolean);\n\n// Helper to extract value after \"key:\"\nconst extract = (label) => {\n  const line = lines.find(l => l.toLowerCase().startsWith(label.toLowerCase()));\n  if (!line) return \"\";\n  return line.split(\":\").slice(1).join(\":\").trim();\n};\n\nconst newPurpose = extract(\"purpose\");\nconst newAmountStr = extract(\"amount\");\nconst newQuantity = extract(\"quantity\");\nconst newReason = extract(\"reason\");\n\n// Create the new transaction object\nconst newTransaction = {\n    date: todayDateString,\n    purpose: newPurpose,\n    amount: newAmountStr,\n    numericAmount: parseAmount(newAmountStr),\n    quantity: newQuantity,\n    reason: newReason\n};\n\n// --- 4. AGGREGATE SPENDING ---\n\nlet totalSpentThisMonth = 0;\nlet totalSpentToday = 0;\nlet todayDetails = [];\n\n// Combine the new transaction with all historical inputs\nconst allTransactions = $input.all()\n    .map(item => item.json) \n    .filter(item => item && item.date && item.amount) \n    .concat(newTransaction); \n\n// Loop through all transactions (historical + new)\nfor (const item of allTransactions) {\n    const amount = item.numericAmount || parseAmount(item.amount); \n\n    if (amount > 0) {\n        // A. Check for \"Today\"\n        if (item.date === todayDateString) {\n            totalSpentToday += amount;\n            // Record where the money was spent today\n            todayDetails.push({\n                purpose: item.purpose,\n                amount: amount,\n                reason: item.reason || 'N/A'\n            });\n        }\n\n        // B. Check for \"Running Month\"\n        const itemDateParts = item.date.split('/');\n        // Note: Months are 0-indexed in JS, so we use the retrieved month index for comparison\n        const itemMonthIndex = parseInt(itemDateParts[1], 10) - 1; \n        const itemYear = parseInt(itemDateParts[2], 10);\n        \n        if (itemMonthIndex === currentMonthIndex && itemYear === currentYear) {\n             totalSpentThisMonth += amount;\n        }\n    }\n}\n\n// --- 5. FINAL OUTPUT (Single Object with Date Context) ---\n\nreturn [\n    {\n        json: {\n            // Date Context\n            currentDate: todayDateString,\n            currentMonth: currentMonthName, // Now includes the name\n            currentYear: currentYear,\n            \n            // Spending Totals and Details\n            totalSpentThisMonth: totalSpentThisMonth,\n            totalSpentToday: totalSpentToday,\n            todayExpenditures: todayDetails,\n        }\n    }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        -464
+      ],
+      "id": "0f671be3-9cba-4349-b88c-afcbb52759f6",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "chatId": "8239137102",
+        "text": "=Your expenses have been recorded - \n\nToday {{ $json.currentDate }} Total expenses - {{ $json.totalSpentToday }} TK\n\nThis {{ $json.currentMonth }} {{ $json.currentYear }} your total expenses - {{ $json.totalSpentThisMonth }} TK",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1136,
+        -464
+      ],
+      "id": "2d04fdac-a1e2-48f5-9bc4-0cb953a4879d",
+      "name": "Send a text message1",
+      "webhookId": "3ee2303b-9b83-43f9-8848-0bbe363783a6",
+      "credentials": {
+        "telegramApi": {
+          "id": "nJf03VkyMzSkE7uX",
+          "name": "Telegram account_Fuad"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "67ff3ff5-1487-462b-a3e0-ef4df3a9eeb1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8aa7a6b00703250dcbefcb510baac06d8bd02203b4f9c49a6f275db8e3adde34"
+  },
+  "id": "TzWlffrnYkPTWlqS",
+  "tags": []
+}
