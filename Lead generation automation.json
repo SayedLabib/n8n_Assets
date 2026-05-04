@@ -209,8 +209,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        256,
-        -880
+        448,
+        -896
       ],
       "id": "bc05ef81-ddd0-4048-b641-99419ebbdabe",
       "name": "Code in JavaScript",
@@ -245,12 +245,13 @@
             "email_2": "={{ $('Filtering method').item.json.email_2 }}",
             "email_3": "={{ $('Filtering method').item.json.email_3 }}",
             "Websites": "={{ $('Filtering method').item.json.Websites }}",
-            "Domain": "={{ $('Filtering method').item.json.Domain }}",
-            "Facebook": "={{ $('Filtering method').item.json.Facebook }}",
             "Instagram": "={{ $('Filtering method').item.json.Instagram }}",
             "Youtube": "={{ $('Filtering method').item.json.Youtube }}",
             "Twitter": "={{ $('Filtering method').item.json.Twitter }}",
-            "LinkedIn": "={{ $('Filtering method').item.json.LinkedIn }}"
+            "LinkedIn": "={{ $('Filtering method').item.json.LinkedIn }}",
+            "Status": "=To do",
+            "Domain": "={{ $('Filtering method').item.json.Domain }}",
+            "Facebook": "={{ $('Filtering method').item.json.Facebook }}"
           },
           "matchingColumns": [
             "row_number"
@@ -274,7 +275,7 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true,
-              "removed": true
+              "removed": false
             },
             {
               "id": "Company category",
@@ -355,7 +356,8 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Facebook",
@@ -364,7 +366,8 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Instagram",
@@ -413,7 +416,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        720,
+        768,
         -608
       ],
       "id": "94074afe-5d52-4c73-bc9f-a69c1d47802f",
@@ -455,7 +458,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        0,
+        672,
         -896
       ],
       "id": "5d026410-cbf4-486a-b8e4-9f2a16ea5132",
@@ -467,7 +470,8 @@
         "rule": {
           "interval": [
             {
-              "triggerAtMinute": null
+              "field": "minutes",
+              "minutesInterval": 20
             }
           ]
         }
@@ -502,8 +506,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -144,
-        -592
+        -128,
+        -784
       ],
       "id": "a3c4ce58-94c7-4e8e-af79-5953a4bd93ac",
       "name": "Get row(s) in sheet1",
@@ -554,11 +558,26 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        96,
-        -592
+        80,
+        -784
       ],
       "id": "57c6f07c-307d-4cec-a984-cac34780a959",
       "name": "Filtering method"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        -608
+      ],
+      "id": "cc7fba82-bcc7-49c4-896e-7de8a5187ff9",
+      "name": "Wait",
+      "webhookId": "49050939-82b5-4f1f-a090-f48dad43a588",
+      "disabled": true
     }
   ],
   "pinData": {},
@@ -660,7 +679,7 @@
       "main": [
         [
           {
-            "node": "Append row in sheet",
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -684,6 +703,17 @@
           }
         ]
       ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -692,7 +722,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "6632437d-4809-4707-afbb-f5f10160ccfc",
+  "versionId": "7ba08e46-9ce0-4842-aa4f-6eb248664448",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "20cf75cd0417fe5be3c3d8dcf7163bcd4dd5f0947193527bf3d55f850ac76577"

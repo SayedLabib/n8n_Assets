@@ -1,0 +1,1617 @@
+{
+  "name": "GoGet Property Management",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                2,
+                6
+              ],
+              "triggerAtMinute": 55
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "f663ed65-f9a3-47fc-a48e-d74028204590",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "content": "\n### will add a voice agents to automatically update the sheets topic\n\n### will add image generation model to generate an image based on the topic headers\n\n### will add drive which will store the image and the linked in will take the photo from the web and will automatically post the content and genrated image from the drive",
+        "height": 464,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1520,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "d0581af4-0b2e-48e2-8126-115556c5b45a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes",
+          "mode": "list",
+          "cachedResultName": "Social Media Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2136577211,
+          "mode": "list",
+          "cachedResultName": "GoGet Property Management",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit#gid=2136577211"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "=Status",
+              "lookupValue": "To do"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        16,
+        0
+      ],
+      "id": "d568a9b4-a0ca-40c0-8fb4-a032273fe29c",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P9Hi3izoVFXpgYR2",
+          "name": "Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "fecfc00e-fce1-47df-964a-9d9cbb61c6c2",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes",
+          "mode": "list",
+          "cachedResultName": "Social Media Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2136577211,
+          "mode": "list",
+          "cachedResultName": "GoGet Property Management",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit#gid=2136577211"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Created",
+            "Topic": "={{ $('Get row(s) in sheet1').item.json.Topic }}",
+            "Content": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image_link",
+              "displayName": "Image_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1056,
+        0
+      ],
+      "id": "926bb7e8-43db-46de-b0d7-c76842b05c5d",
+      "name": "Update row in sheet",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P9Hi3izoVFXpgYR2",
+          "name": "Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 480,
+        "width": 672,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "74100058-0cdb-4c7f-a662-a14fdd0ae1b0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 464,
+        "width": 736,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "660818c8-4aff-472e-a026-9be323dd3511",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "8239137102",
+        "binaryData": true,
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Approve",
+                    "additionalFields": {
+                      "callback_data": "Approved"
+                    }
+                  },
+                  {
+                    "text": "Decline",
+                    "additionalFields": {
+                      "callback_data": "Declined"
+                    }
+                  },
+                  {
+                    "text": "Remake",
+                    "additionalFields": {
+                      "callback_data": "Remake"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        512
+      ],
+      "id": "e98b85a8-0e87-48f8-8ca0-7c07e10ec2a1",
+      "name": "Send a photo message",
+      "webhookId": "954df9b0-c2da-4378-848d-5cc2bc6193a9",
+      "credentials": {
+        "telegramApi": {
+          "id": "N2FGaKFd6iqiRpDo",
+          "name": "Telegram GoGet property management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "35a66501-031c-4c64-83ed-e25537e39960",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "Approved",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1104,
+        528
+      ],
+      "id": "9cf899e8-739a-4335-aa4c-4c054f657d39",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "8239137102",
+        "text": "=Your Post Has Been {{ $('If').item.json.callback_query.data }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2416,
+        512
+      ],
+      "id": "72696476-9b51-4c9a-b882-2808b113ab44",
+      "name": "Send a text message",
+      "webhookId": "7b0d3b14-3724-44c1-a1c8-0b7d9a113700",
+      "credentials": {
+        "telegramApi": {
+          "id": "N2FGaKFd6iqiRpDo",
+          "name": "Telegram GoGet property management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        512
+      ],
+      "id": "c02b2294-eab9-4da2-8b69-b71bcd8c2692",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes",
+          "mode": "list",
+          "cachedResultName": "Social Media Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2136577211,
+          "mode": "list",
+          "cachedResultName": "GoGet Property Management",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit#gid=2136577211"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Created"
+            }
+          ]
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "detectAutomatically"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1312,
+        512
+      ],
+      "id": "b9a2af3c-cb64-4eb3-9894-bf6fa6b3d7ae",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P9Hi3izoVFXpgYR2",
+          "name": "Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        512
+      ],
+      "id": "438c5580-6c07-4d0a-8df6-3afd3c954f97",
+      "name": "Limit2"
+    },
+    {
+      "parameters": {
+        "name": "=image_{{ String($itemIndex + 1).padStart(3, '0') }}.png\n\n",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1khlxvYU6Vpg3ggy32b-mJtrPHLvaAUii",
+          "mode": "list",
+          "cachedResultName": "Saved Images",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1khlxvYU6Vpg3ggy32b-mJtrPHLvaAUii"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        240,
+        816
+      ],
+      "id": "461ecaa4-aa24-46ee-a220-172adf2f0f9f",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "myNCpwLrk6qI3eGB",
+          "name": "Google Drive (verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes",
+          "mode": "list",
+          "cachedResultName": "Social Media Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2136577211,
+          "mode": "list",
+          "cachedResultName": "GoGet Property Management",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit#gid=2136577211"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ $('Limit1').item.json.Topic }}",
+            "Image_link": "={{ $json.webViewLink }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image_link",
+              "displayName": "Image_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        816
+      ],
+      "id": "1d4b2d1b-aa3d-447c-b15f-54168b5a20d0",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P9Hi3izoVFXpgYR2",
+          "name": "Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.Image_link }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1680,
+        512
+      ],
+      "id": "c672f009-9c21-43fb-93c0-8fed333e7166",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "myNCpwLrk6qI3eGB",
+          "name": "Google Drive (verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "postAs": "organization",
+        "organization": "101987608",
+        "text": "={{ $json.Content }}",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        2096,
+        512
+      ],
+      "id": "0ca7b894-8200-4134-98b4-d9cb28d917f2",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "UOF9ko32JbUctwjz",
+          "name": "LinkedIn GoGet Property Management"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "00ac3a73-e40e-463f-843f-4f345bbeea7e",
+      "name": "Limit3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Topic }}",
+        "options": {
+          "systemMessage": "=You are a Social Media Post Generator Agent operating in strict mode. Your task is to transform content into engaging, professional, and marketing-focused social media posts for LinkedIn, Facebook, Instagram, and X. Try to not add any emojis like It's generated with AI. Make it like a humanize post. And the hashtags will be there in the generated post\n\n✅ Objective:\n\nConvert content into marketing-oriented social media posts.\n\nMaintain a professional, inspiring, and audience-friendly style.\n\nTarget Audience: Entrepreneurs, Businesses, Founders, AI Enthusiasts, and General Users.\n\n✅ Content Rules:\n\nMax Length: 100 - 150 words.\n\nTone: Clear, positive, and brand-focused. No slang, misinformation, or negativity.\n\nGoal: Encourage engagement, awareness, and brand value.\n\n✅ Platform Compatibility:\n\nSuitable for LinkedIn, Facebook, Instagram, and X.\n\nEmojis and light hashtags allowed (if appropriate).\n\n✅ Post Structure:\n\nHeadline: Catchy and concise.\n\nMain Content: Engaging, aligned with brand messaging (max 100 - 150 words).\n\nCall-to-Action (CTA): Encourage user action, without colons (e.g., \"Explore the future of business with AI\").\n\nHashtags: Relevant and trending, without colons (e.g., #AIAutomation, #BusinessGrowth).\n\nEmojis: Optional, to enhance visual appeal.\n\n✅ Example Format for Generated Post:\n\nMake Your New Year Prosperous with AI Automation!\nAs a new year dawns, elevate your business prospects by integrating AI automation. Unlock unprecedented efficiency, drive innovation, and achieve remarkable growth. Leverage the power of artificial intelligence to streamline operations, enhance decision-making, and position your enterprise for future success. This is your moment to transform challenges into triumphs!\n\nExplore the future of business with AI\n#AIAutomation #NewYearNewBiz #BusinessGrowth #FutureOfWork #DigitalTransformation\n\n\n✅ Output Requirements:\n\nDeliver final post text only.\n\nNo extra formatting, explanations, or system messages.\n\nEnsure that CTA and hashtags appear without colons, following the format as shown in the example."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        0
+      ],
+      "id": "fa454fd3-5e22-4b50-a593-d5469a499faf",
+      "name": "Post generation"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes",
+          "mode": "list",
+          "cachedResultName": "Social Media Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2136577211,
+          "mode": "list",
+          "cachedResultName": "GoGet Property Management",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z6bDzSl2vXC4UWd6qOVSfLjLNRtmxT8HqyPl_gGibes/edit#gid=2136577211"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Created"
+            }
+          ]
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "detectAutomatically"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -560,
+        256
+      ],
+      "id": "2b1c80c0-0069-42ca-a283-4fd89bdf9c91",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P9Hi3izoVFXpgYR2",
+          "name": "Sheets(verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 1,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1Gkw4zFUqW_Qo-r3VNlV8xXN3BDeXmbTc",
+            "mode": "list",
+            "cachedResultName": "Go Get Property Management Logo",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1Gkw4zFUqW_Qo-r3VNlV8xXN3BDeXmbTc"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -48,
+        512
+      ],
+      "id": "883f3178-5af7-43e5-baa4-991419ed8a49",
+      "name": "Search Logo",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "myNCpwLrk6qI3eGB",
+          "name": "Google Drive (verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        128,
+        512
+      ],
+      "id": "61b0b48c-29cd-4ae8-a256-18a0d99344b9",
+      "name": "Download logo",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "myNCpwLrk6qI3eGB",
+          "name": "Google Drive (verified)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "edit",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-pro-image-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-pro-image-preview (Nano Banana Pro)"
+        },
+        "prompt": "={{ $('Prompt Enhancer').item.json.output }}",
+        "images": {
+          "values": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        784
+      ],
+      "id": "e548df32-86ae-4375-b09e-da6d05b8b42e",
+      "name": "Edit an image (gemini)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Jvwv12uTYKzKjaRK",
+          "name": "Gemini(verified Tier - 1)"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "chatId": "8239137102",
+        "text": "=Your Post Has Been  {{ $json.callback_query.data }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1504,
+        704
+      ],
+      "id": "448cf692-792a-4260-80f2-97ad04bf7b36",
+      "name": "Decline Message",
+      "webhookId": "7afcbb71-2a29-49fc-8838-faf969c929d9",
+      "credentials": {
+        "telegramApi": {
+          "id": "N2FGaKFd6iqiRpDo",
+          "name": "Telegram GoGet property management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8239137102",
+        "text": "=Remaking the post please wait for couple of minutes",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1504,
+        880
+      ],
+      "id": "0be0c46a-16c1-4731-8346-8403756b2858",
+      "name": "Remaking the content",
+      "webhookId": "7b0d3b14-3724-44c1-a1c8-0b7d9a113700",
+      "credentials": {
+        "telegramApi": {
+          "id": "N2FGaKFd6iqiRpDo",
+          "name": "Telegram GoGet property management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2e19030c-ef36-4487-86ca-eee60363e5cc",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "Remake",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1232,
+        768
+      ],
+      "id": "4aa74125-98b9-437a-a6bb-b2c606443a33",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Topic }}",
+        "options": {
+          "systemMessage": "=You are a Senior Graphic Ad Designer. Your goal is to generate high-conversion AI image prompts for social media advertisements. Alsways be creative While you are designing poster image. And, the image will be 4:5 or, 1:1 always.\n\nCRITICAL INSTRUCTION: Provide the output immediately starting with the prompt. Do not use introductory phrases like \"Here is your prompt\" or \"The Poster Prompt:\". Provide only the raw technical prompt followed by the marketing details.\n\nThe Design Framework:\nThe Visual Foundation: Describe a hyper-realistic, commercial-grade scene (lighting, textures, color palette).\n\nTypography Integration: Describe specific text to be rendered inside the image (Headline, Sub-headline).\n\nCTA Integration: Describe a visual \"Call to Action\" element (e.g., a \"Sign Up\" button or \"Link in Bio\" graphic) rendered within the design.\n\nLayout: Specify the use of negative space for readability and logo placement on top left or right corner of the image (Top Left/Top Right)\n\nOutput Format (Strictly Follow This):\n[100-150 word technical prompt including visual description, text overlays, and logo placement.]\n\nOutput Requirements:\n\nDeliver final prompt only.\n\nNo extra formatting, explanations, or system messages.\n\nEnsure that CTA and hashtags appear without colons and No \"Headlines\" No \"Sub Headlines:\" in the prompt.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -352,
+        512
+      ],
+      "id": "73bb4716-51e2-4631-acbd-f083b49c8f63",
+      "name": "Prompt Enhancer"
+    },
+    {
+      "parameters": {
+        "jsCode": "const uniqueId = Date.now() + '_' + Math.random().toString(36).substring(2, 7);\n\n// Set the new filename (e.g., 1715856201_a7b2_image.jpg)\n$input.item.binary.data.fileName = `${uniqueId}_image.jpg`;\n\n// Ensure the extension matches for Supabase/Meta compatibility\n$input.item.binary.data.fileExtension = 'jpg';\n\nreturn $input.item;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        752
+      ],
+      "id": "48b712fd-373a-4117-9179-8cff7312b10f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v21.0/17841470709686107/media_publish",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "=EAALZBM1mFe7ABQ9FzFBujZCqyQbyl1LREZAMvsETZAPdkGc3xeHJVqIZCfQXyC1jZAsuqbTIvzIEfj255wcINe1j4CtxKrZC4A2tUQretqpCBq6Us5WKcaP3sEqhANq1wiqOmQqVELYZCmpf3ijomw3A3o7HJ9MM7lVQa9GagjI4K5I6MB2g6jdWYC8BZARcFI8fcgW0ZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2192,
+        1328
+      ],
+      "id": "075d2635-72b6-4d19-bf9d-57a29613323a",
+      "name": "Instagram(Post publish)",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "231984500008568",
+        "edge": "photos",
+        "sendBinaryData": true,
+        "binaryPropertyName": "data",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "message",
+                "value": "={{ $('Limit2').item.json.Content }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        784
+      ],
+      "id": "b8ef6368-2306-406e-a30f-c24a5ee26b65",
+      "name": "Facebook Graph API",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "3vuxbn0OLX43YGpn",
+          "name": "Facebook GoGet Property Management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.x.com/2/media/upload",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "twitterOAuth1Api",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "media_category",
+              "value": "tweet_image"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "media",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2496,
+        1008
+      ],
+      "id": "ae82b92b-8227-4f06-a891-968b066821d1",
+      "name": "tweeter_upload_image",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## IMGB for file upload",
+        "height": 240,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        944
+      ],
+      "typeVersion": 1,
+      "id": "d8e8c222-17e1-417a-9b6b-9e7c5b0cf94d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Facebook Upload",
+        "height": 208,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2256,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "c617acfa-75e7-4a5d-82d1-d0a3fea327d8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Instagram upload",
+        "height": 240,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        1248
+      ],
+      "typeVersion": 1,
+      "id": "38306bad-e8a7-42e5-80af-3fecb717aef1",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.imgbb.com/1/upload?key=67197fbb00a674a51021e4a504e40592",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        752,
+        1248
+      ],
+      "id": "fd7cee24-84b6-4aba-9be8-29ff7803a1c5",
+      "name": "IMGB upload",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "text": "={{ $('Code in JavaScript').item.json.content }}",
+        "additionalFields": {
+          "attachments": "={{ $json.data.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        2704,
+        1008
+      ],
+      "id": "90c6f81f-911b-4eef-922d-7cae8d84f983",
+      "name": "Create Tweet",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "##  X account post",
+        "height": 240,
+        "width": 624
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2272,
+        944
+      ],
+      "typeVersion": 1,
+      "id": "5c6856b3-abda-431a-854f-02e2ea632d78",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        912,
+        528
+      ],
+      "id": "2053322a-0598-4b96-b4a1-9264fe2eadc9",
+      "name": "Telegram Trigger",
+      "webhookId": "858e0b00-56e3-4763-9e98-db0a31a3b409",
+      "credentials": {
+        "telegramApi": {
+          "id": "N2FGaKFd6iqiRpDo",
+          "name": "Telegram GoGet property management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "17841470709686107",
+        "edge": "media",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "caption",
+                "value": "={{ $('Limit2').item.json.Content }}"
+              },
+              {
+                "name": "image_url",
+                "value": "=https://ntgzcjudpxqvdjwctogg.supabase.co/storage/v1/object/public/{{ $json.Key }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1968,
+        1328
+      ],
+      "id": "f25e7c3f-3b4e-4ee8-9497-ca362e1b90ff",
+      "name": "Facebook Graph API1",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "3vuxbn0OLX43YGpn",
+          "name": "Facebook GoGet Property Management"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://ntgzcjudpxqvdjwctogg.supabase.co/storage/v1/object/Image-files/{{ $binary.data.fileName }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1952,
+        1008
+      ],
+      "id": "01bdf193-e6a3-4412-ac58-c47fe86835c6",
+      "name": "supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dQkp0ZuF5L588dBe",
+          "name": "Supabase account Fuad"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/17841470709686107/media",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "={{ $json.data.url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Limit2').item.json.Content }}"
+            },
+            {
+              "name": "access_token",
+              "value": "EAALZBM1mFe7ABQuc4zXjUjOYv2BL7sZC2FAeDaI1J5xfUQZAaYv0jmsZAdkqhUiwq8ziY7CbDFnSrZCB93E5VRPCRDQZCtAuZCD91KUP13KJjMn1SvRs4iKDZCJDhpMMUxV51d3Uf4Flj7lwnxGCvLF3dXKvA2xAgmCs6Sqmkkk8LmbFPMvgRuVk3PgvjjlNMtCen0cZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1184,
+        1264
+      ],
+      "id": "4ed78d0d-e761-4291-b285-445dfc0e7c60",
+      "name": "Instagram_Container",
+      "notesInFlow": false,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {
+          "maxTokensToSample": 2056
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        320,
+        336
+      ],
+      "id": "f33e1993-6d7b-4b5b-8129-0ebbae8d16ed",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "aNMlXYaSk3LwKfyd",
+          "name": "Groq account verified"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "edit",
+        "prompt": "={{ $('Prompt Enhancer').item.json.output }}",
+        "images": {
+          "values": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        512
+      ],
+      "id": "b2d1b9f6-d0c0-4320-9466-d8afcba775df",
+      "name": "Edit image",
+      "credentials": {
+        "openAiApi": {
+          "id": "TyoKpfsg4ylXJemq",
+          "name": "OpenAI Image Edit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {
+          "maxTokensToSample": 2056
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -464,
+        752
+      ],
+      "id": "b1736645-c36a-4a3b-826e-9337000ef8f8",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "aNMlXYaSk3LwKfyd",
+          "name": "Groq account verified"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Limit3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Prompt Enhancer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Limit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit2": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a post": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit3": {
+      "main": [
+        [
+          {
+            "node": "Post generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post generation": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Logo": {
+      "main": [
+        [
+          {
+            "node": "Download logo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download logo": {
+      "main": [
+        [
+          {
+            "node": "Edit image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit an image (gemini)": {
+      "main": [
+        []
+      ]
+    },
+    "Remaking the content": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Remaking the content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decline Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt Enhancer": {
+      "main": [
+        [
+          {
+            "node": "Search Logo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "tweeter_upload_image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tweeter_upload_image": {
+      "main": [
+        [
+          {
+            "node": "Create Tweet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMGB upload": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "supabase": {
+      "main": [
+        [
+          {
+            "node": "Facebook Graph API1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Graph API1": {
+      "main": [
+        [
+          {
+            "node": "Instagram(Post publish)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post generation",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Prompt Enhancer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit image": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "93c159f1-e66b-4d5a-8862-07a6feb11d15",
+  "meta": {
+    "instanceId": "20cf75cd0417fe5be3c3d8dcf7163bcd4dd5f0947193527bf3d55f850ac76577"
+  },
+  "id": "lfdeAH-d2B0pMN74sQnWy",
+  "tags": []
+}
